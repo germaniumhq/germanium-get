@@ -1,6 +1,7 @@
 from __future__ import print_function
 
 from termcolor import colored
+import textwrap
 import re
 
 
@@ -15,6 +16,12 @@ def text(text):
 
 def logo(text):
     return colored(text, "grey", attrs=["bold"])
+
+
+def block(text):
+    return colored(textwrap.dedent(text).strip(),
+                   "grey",
+                   attrs=["bold"])
 
 
 def question(text):
