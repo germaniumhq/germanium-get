@@ -2,9 +2,11 @@ import colorama
 import textwrap
 from styles import title, text, question, option, options, read_option, warning, block, logo
 from detectors import is_edge_detected, is_chrome_detected, is_firefox_detected, is_java8_installed
-from download import download_url
+from download import download, extract_zip
 import tempfile
 import errno
+from test_download_urls import IE_DRIVER_DOWNLOAD_URL
+import os
 
 
 install_ie = False
@@ -169,7 +171,7 @@ if option == "no":
 
 def create_temp_folder():
     temp_folder = tempfile.mkdtemp(prefix='germanium_', suffix='install')
-    def temp(subpath):
+    def temp(subpath=''):
         return os.path.join(temp_folder, subpath)
 
     return temp
@@ -178,7 +180,7 @@ def create_temp_folder():
 def get_germanium_folder():
     user_home = os.environ['USERPROFILE']
 
-    def ge_folder(subpath):
+    def ge_folder(subpath=''):
         return os.path.join(user_home, 'Desktop', 'germanium', subpath)
 
     return ge_folder
@@ -197,11 +199,12 @@ def mkdir_p(path):
 temp = create_temp_folder()
 ge_folder = get_germanium_folder()
 
-mkdir_p(ge_folder(''))
+mkdir_p(ge_folder())
 
 if install_ie:
-    download_url("http://selenium-release.storage.googleapis.com/3.0/IEDriverServer_Win32_3.0.0.zip",
-                 temp("IEDriverServer.zip"))
+    download(IE_DRIVER_DOWNLOAD_URL,
+             temp("IEDriverServer.zip"))
+    extract_zip(temp("IEDriverServer.zip"), ge_folder())
 
 colorama.deinit()
 
