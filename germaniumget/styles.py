@@ -58,8 +58,6 @@ def options(*opts, **kw):
     return message
 
 
-
-
 def read_option(*opts, **kw):
     default_value = opts[0]
 
@@ -88,4 +86,12 @@ def read_option(*opts, **kw):
                 return lower_text
 
         print(error("Invalid input value: %s." % result))
+
+
+def read_string(prompt):
+    """ Read a full line string from the user. """
+    print(text(prompt), end="")
+    result = raw_input()
+
+    return result
 

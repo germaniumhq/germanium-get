@@ -1,11 +1,18 @@
 import colorama
 import textwrap
-from styles import title, text, question, option, options, read_option, warning, block, logo
+from styles import title, text, question, option, options, read_option, warning, block, logo, read_string
 from detectors import is_edge_detected, is_chrome_detected, is_firefox_detected, is_java8_installed
 from download import download, extract_zip
 import tempfile
 import errno
-from test_download_urls import IE_DRIVER_DOWNLOAD_URL
+
+from test_download_urls import \
+    IE_DRIVER_DOWNLOAD_URL, \
+    GECKO_DRIVER_DOWNLOAD_URL, \
+    CHROME_DRIVER_DOWNLOAD_URL, \
+    EDGE_DRIVER_DOWNLOAD_URL, \
+    SELENIUM_STANDALONE_JAR_URL
+
 import os
 
 
@@ -136,6 +143,16 @@ if not is_java8_installed():
 
 
 #=====================================================
+# Selenium Hub location.
+#=====================================================
+print(question("Selenium Hub URL?"))
+print(text("""
+To what hub should this node connect to.
+"""))
+
+selenium_hub_url = read_string("Url:")
+
+#=====================================================
 # Now that the configuration is done, let's ask the user
 # one more time, and be done with it.
 #=====================================================
@@ -199,12 +216,36 @@ def mkdir_p(path):
 temp = create_temp_folder()
 ge_folder = get_germanium_folder()
 
-mkdir_p(ge_folder())
+mkdir_p(ge_folder("lib"))
 
+#=====================================================
+# Download and unzip the drivers that are needed.
+#=====================================================
 if install_ie:
     download(IE_DRIVER_DOWNLOAD_URL,
              temp("IEDriverServer.zip"))
-    extract_zip(temp("IEDriverServer.zip"), ge_folder())
+    extract_zip(temp("IEDriverServer.zip"), ge_folder("lib"))
+
+if install_firefox:
+    download(GECKO_DRIVER_DOWNLOAD_URL,
+             temp("GeckoDriver.zip"));
+
+    extract_zip(temp("GeckoDriver.zip"), ge_folder("lib"))
+
+if install_chrome:
+    download(CHROME_DRIVER_DOWNLOAD_URL,
+             temp("ChromeDriver.zip"));
+
+    extract_zip(temp("ChromeDriver.zip"), ge_folder("lib"))
+
+if install_edge:
+    download(EDGE_DRIVER_DOWNLOAD_URL,
+             ge_folder("lib/MicrosoftWebDriver.exe"))
+
+download(SELENIUM_STANDALONE_JAR_URL,
+         ge_folder("lib/selenium-standalone.jar"))
+
+read_string("Done. Press ENTER to continue.")
 
 colorama.deinit()
 
