@@ -7,6 +7,7 @@ import tempfile
 import errno
 from templates import template_run_node, template_configuration_file, write_file
 import re
+from execute_program import execute_program
 
 from test_download_urls import \
     IE_DRIVER_DOWNLOAD_URL, \
@@ -24,6 +25,9 @@ install_edge = False
 install_firefox = False
 install_chrome = False
 install_java = False
+
+germanium_home = r'C:\Germanium'
+java_home = r'C:\Germanium\Java'
 
 #=====================================================
 # Actual program starts here
@@ -134,6 +138,7 @@ else:
 #=====================================================
 if not is_java8_installed():
     def check_java_and_license():
+        print('')
         print(question("Install Java 8?"))
         print(warning("This is required for the Selenium Node to work."))
 
@@ -228,10 +233,8 @@ def create_temp_folder():
 
 
 def get_germanium_folder():
-    user_home = os.environ['USERPROFILE']
-
     def ge_folder(subpath=''):
-        return os.path.join(user_home, 'Desktop', 'germanium', subpath)
+        return os.path.join(germanium_home, subpath)
 
     return ge_folder
 
@@ -291,6 +294,13 @@ if install_java:
     download(JAVA_JRE_URL,
              temp("jre-8u121-windows-i586.exe"))
 
+    print(execute_program([temp("jre-8u121-windows-i586.exe"),
+                     r'INSTALLDIR=%s' % java_home,
+                     'INSTALL_SILENT=Enable',
+                     'WEB_JAVA=0',
+                     'SPONSORS=0'
+                    ]))
+
 #=====================================================
 # Download and unzip the drivers that are needed.
 #=====================================================
@@ -318,13 +328,22 @@ if install_edge:
 download(SELENIUM_STANDALONE_JAR_URL,
          ge_folder("lib/selenium-standalone.jar"))
 
-write_file(ge_folder("run-things.bat"),
-        template_run_node(**{'HUB_ADDRESS': selenium_hub}))
+write_file(ge_folder("run-node.bat"),
+        template_run_node(**{
+            'hub_address': selenium_hub,
+            'java_home': java_home,
+            'germanium_home': germanium_home
+        }))
 
 write_file(ge_folder("germanium-node.conf"),
         template_configuration_file(**{'browsers': browsers_enabled}))
 
-read_string("Done. Press ENTER to continue.")
+print('')
+print(title("Done"))
+print(text(r"Run the node by calling %s\run-node.bat" % germanium_home))
+
+print('')
+read_string("Press ENTER to continue")
 
 colorama.deinit()
 

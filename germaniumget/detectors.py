@@ -4,6 +4,7 @@ import sys
 import re
 import subprocess
 from styles import warning
+from execute_program import execute_program
 
 def is_edge_detected():
     return is_program_in_classpath("edge")
@@ -18,8 +19,8 @@ def is_firefox_detected():
 
 
 def is_java8_installed():
-    return not is_program_in_classpath("java") \
-        or not program_execution_matches(
+    return is_program_in_classpath("java") \
+        and program_execution_matches(
             ["java", "-version"],
             r'java version "1.8.\d+_\d+')
 
@@ -51,14 +52,4 @@ def program_execution_matches(program, searched_pattern):
     print(warning(stdout))
 
     return bool(pattern.search(stdout))
-
-
-def execute_program(program):
-    """
-    Execute a single program.
-    """
-    process = subprocess.Popen(program, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-    stdout, stderr = process.communicate()
-    return stdout + stderr
-
 
