@@ -5,13 +5,16 @@ from detectors import is_edge_detected, is_chrome_detected, is_firefox_detected,
 from download import download, extract_zip
 import tempfile
 import errno
+from templates import template_run_node, template_configuration_file, write_file
+import re
 
 from test_download_urls import \
     IE_DRIVER_DOWNLOAD_URL, \
     GECKO_DRIVER_DOWNLOAD_URL, \
     CHROME_DRIVER_DOWNLOAD_URL, \
     EDGE_DRIVER_DOWNLOAD_URL, \
-    SELENIUM_STANDALONE_JAR_URL
+    SELENIUM_STANDALONE_JAR_URL, \
+    JAVA_JRE_URL
 
 import os
 
@@ -130,15 +133,38 @@ else:
 # Java
 #=====================================================
 if not is_java8_installed():
-    print(question("Install Java 8?"))
-    print(warning("This is required for the Selenium Node to work."))
+    def check_java_and_license():
+        print(question("Install Java 8?"))
+        print(warning("This is required for the Selenium Node to work."))
 
-    option = read_option("[Y]es", "[N]o", "[C]ancel")
+        option = read_option("[Y]es", "[N]o", "[C]ancel")
 
-    if option == "cancel":
-        exit(1)
+        if option == "cancel":
+            exit(1)
 
-    if option == "yes":
+        if option == "no":
+            print(warning("Without a Java 8 installation the Selenium Node will "
+                "not function. Make sure you will install it before attempting to "
+                "run the node."))
+            return False
+
+        print(question("Do you agree with the Oracle Java License?"))
+        print(text("You can find the license at: "
+                   "http://www.oracle.com/technetwork/java/javase/terms/license/index.html"))
+        option = read_option("[Y]es", "[N]o", "[C]ancel")
+
+        if option == "cancel":
+            exit(1)
+
+        if option == "no":
+            print(warning("Without a Java 8 installation the Selenium Node will "
+                "not function. Make sure you will install it before attempting to "
+                "run the node."))
+            return False
+
+        return True
+
+    if check_java_and_license():
         install_java = 1
 
 
@@ -147,10 +173,15 @@ if not is_java8_installed():
 #=====================================================
 print(question("Selenium Hub URL?"))
 print(text("""
-To what hub should this node connect to.
+To what hub should this node connect to. Only the IP,
+and the port if it's different from 4444, are required.
 """))
 
-selenium_hub_url = read_string("Url:")
+selenium_hub = read_string("Hub", default="localhost")
+
+# if there is no port specified in the host
+if not re.compile(r"^.*?\:\d+$").match(selenium_hub):
+    selenium_hub += ":4444"
 
 #=====================================================
 # Now that the configuration is done, let's ask the user
@@ -173,6 +204,8 @@ if install_firefox:
 
 if install_java:
     print("  Install Java.")
+
+print("  Hub: %s" % selenium_hub)
 
 print(question("Start downloading and installation?"))
 option = read_option("[Y]es", "[N]o")
@@ -218,6 +251,46 @@ ge_folder = get_germanium_folder()
 
 mkdir_p(ge_folder("lib"))
 
+browsers_enabled = []
+
+if install_ie:
+    browsers_enabled.append({
+        'browserName': 'internet explorer',
+        'maxInstances': '1',
+        'seleniumProtocol': 'WebDriver'
+    })
+
+if install_firefox:
+    browsers_enabled.append({
+        'browserName': 'firefox',
+        'maxInstances': '10',
+        'seleniumProtocol': 'WebDriver'
+    })
+
+
+if install_chrome:
+    browsers_enabled.append({
+        'browserName': 'chrome',
+        'maxInstances': '10',
+        'seleniumProtocol': 'WebDriver'
+    })
+
+if install_edge:
+    browsers_enabled.append({
+        'browserName': 'MicrosoftEdge',
+        'maxInstances': '10',
+        'seleniumProtocol': 'WebDriver'
+    })
+
+#=====================================================
+# If Java needs to be downloaded, let's start with
+# the elephant in the room.
+#=====================================================
+
+if install_java:
+    download(JAVA_JRE_URL,
+             temp("jre-8u121-windows-i586.exe"))
+
 #=====================================================
 # Download and unzip the drivers that are needed.
 #=====================================================
@@ -244,6 +317,12 @@ if install_edge:
 
 download(SELENIUM_STANDALONE_JAR_URL,
          ge_folder("lib/selenium-standalone.jar"))
+
+write_file(ge_folder("run-things.bat"),
+        template_run_node(**{'HUB_ADDRESS': selenium_hub}))
+
+write_file(ge_folder("germanium-node.conf"),
+        template_configuration_file(**{'browsers': browsers_enabled}))
 
 read_string("Done. Press ENTER to continue.")
 

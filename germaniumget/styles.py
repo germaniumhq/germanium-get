@@ -88,10 +88,19 @@ def read_option(*opts, **kw):
         print(error("Invalid input value: %s." % result))
 
 
-def read_string(prompt):
+def read_string(prompt, default=None):
     """ Read a full line string from the user. """
-    print(text(prompt), end="")
+    if default:
+        print(text("%s:" % prompt), end="")
+    else:
+        print(text("%s (%s):" % (prompt, default)), end="")
+
     result = raw_input()
 
+    if not result:
+        print(title(default))
+        return default
+
+    print(title(result))
     return result
 

@@ -4,6 +4,14 @@ import urllib
 import zipfile
 
 
+class HeaderAwareUrlOpener(urllib.FancyURLopener):
+    def __init__(self, *args, **kw):
+        urllib.FancyURLopener.__init__(self, *args, **kw)
+        self.addheader("Cookie", "oraclelicense=accept-securebackup-cookie")
+
+urllib._urlopener = HeaderAwareUrlOpener()
+
+
 def download(url, file_name):
     def my_hook(t):
       """
@@ -37,8 +45,10 @@ def download(url, file_name):
 
     with tqdm(unit='B', unit_scale=True, miniters=1,
               desc=url.split('/')[-1]) as t:  # all optional kwargs
-        urllib.urlretrieve(url, filename=file_name,
-                           reporthook=my_hook(t), data=None)
+        urllib.urlretrieve(url,
+                           filename=file_name,
+                           reporthook=my_hook(t),
+                           data=None)
 
 
 def extract_zip(zip_file, target_folder):

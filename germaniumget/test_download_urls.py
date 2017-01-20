@@ -7,3 +7,4 @@ EDGE_DRIVER_DOWNLOAD_URL="http://%s:8000/MicrosoftWebDriver.exe" % TEST_HOST
 
 SELENIUM_STANDALONE_JAR_URL="http://%s:8000/selenium-server-standalone-3.0.1.jar" % TEST_HOST
 
+JAVA_JRE_URL="http://download.oracle.com/otn-pub/java/jdk/8u121-b13/e9e7ea248e2c4826b92b3f075a80e441/jre-8u121-windows-i586.exe"
