@@ -9,6 +9,8 @@ def template_run_node(**data):
 
     template = Template(textwrap.dedent(
     r"""
+    cd {{germanium_home}}/lib
+
     {{java_home}}/bin/java %SELENIUM_JAVA_OPTS% -jar {{germanium_home}}/lib/selenium-standalone.jar ^
         -role node ^
         -hub http://{{hub_address}}/grid/register ^
