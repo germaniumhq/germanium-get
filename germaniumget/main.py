@@ -14,7 +14,7 @@ from file_operations import \
     rm_rf, \
     create_desktop_link
 
-from test_download_urls import \
+from download_urls import \
     IE_DRIVER_DOWNLOAD_URL, \
     GECKO_DRIVER_DOWNLOAD_URL, \
     CHROME_DRIVER_DOWNLOAD_URL, \
