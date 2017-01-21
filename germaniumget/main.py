@@ -3,11 +3,16 @@ import textwrap
 from styles import title, text, question, option, options, read_option, warning, block, logo, read_string
 from detectors import is_edge_detected, is_chrome_detected, is_firefox_detected, is_java8_installed
 from download import download, extract_zip
-import tempfile
 import errno
 from templates import template_run_node, template_configuration_file, write_file
 import re
 from execute_program import execute_program
+from file_operations import \
+    create_temp_folder, \
+    get_germanium_folder, \
+    mkdir_p, \
+    rm_rf, \
+    create_desktop_link
 
 from test_download_urls import \
     IE_DRIVER_DOWNLOAD_URL, \
@@ -223,34 +228,12 @@ if option == "no":
 # We will create first an empty folder for the downloads,
 # then we will fetch stuff.
 #=====================================================
-
-def create_temp_folder():
-    temp_folder = tempfile.mkdtemp(prefix='germanium_', suffix='install')
-    def temp(subpath=''):
-        return os.path.join(temp_folder, subpath)
-
-    return temp
-
-
-def get_germanium_folder():
-    def ge_folder(subpath=''):
-        return os.path.join(germanium_home, subpath)
-
-    return ge_folder
-
-
-def mkdir_p(path):
-    try:
-        os.makedirs(path)
-    except OSError as exc:
-        if exc.errno == errno.EEXIST and os.path.isdir(path):
-            pass
-        else:
-            raise
-
-
 temp = create_temp_folder()
-ge_folder = get_germanium_folder()
+ge_folder = get_germanium_folder(germanium_home)
+
+rm_rf(ge_folder('germanium-node.conf'),
+      ge_folder('run-node.bat'),
+      ge_folder('lib'))
 
 mkdir_p(ge_folder("lib"))
 
@@ -337,6 +320,15 @@ write_file(ge_folder("run-node.bat"),
 
 write_file(ge_folder("germanium-node.conf"),
         template_configuration_file(**{'browsers': browsers_enabled}))
+
+rm_rf(temp())
+
+print('')
+print(title("Create a desktop link?"))
+if read_option("[Y]es", "[N]o") == "yes":
+    create_desktop_link(
+        "Run Germanium Node",
+        ge_folder("run-node.bat"));
 
 print('')
 print(title("Done"))
