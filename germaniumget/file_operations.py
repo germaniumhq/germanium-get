@@ -1,5 +1,4 @@
 import os
-from win32com.client import Dispatch
 import tempfile
 import shutil
 
@@ -57,10 +56,15 @@ def create_desktop_link(title, application, icon=None, workdir=None):
 
     path = desktop_folder("%s.lnk" % title)
 
-    shell = Dispatch('WScript.Shell')
-    shortcut = shell.CreateShortCut(path)
-    shortcut.Targetpath = application
-    shortcut.WorkingDirectory = workdir
-    shortcut.IconLocation = icon
-    shortcut.save()
+    try:
+        from win32com.client import Dispatch
+
+        shell = Dispatch('WScript.Shell')
+        shortcut = shell.CreateShortCut(path)
+        shortcut.Targetpath = application
+        shortcut.WorkingDirectory = workdir
+        shortcut.IconLocation = icon
+        shortcut.save()
+    except ImportError as e:
+        pass
 

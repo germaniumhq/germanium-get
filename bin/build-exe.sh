@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-DOCKER_IMAGE="py2"
+DOCKER_IMAGE="lpy2"
 #DOCKER_IMAGE="cdrx/pyinstaller-windows:python2"
 
 docker run -it \
@@ -9,5 +9,5 @@ docker run -it \
     --link nexus \
     -e PYPI_URL="http://nexus:8081/repository/pypi-local/pyp" \
     -e PYPI_INDEX_URL="http://nexus:8081/repository/pypi-local/simple" \
-    py2
+    $DOCKER_IMAGE
 
