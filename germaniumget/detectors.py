@@ -7,7 +7,8 @@ from styles import warning
 from execute_program import execute_program
 
 def is_edge_detected():
-    return is_program_in_classpath("edge")
+    return is_program_in_folder(r"C:\Windows\SystemApps\Microsoft.MicrosoftEdge_8wekyb3d8bbwe",
+                                "MicrosoftEdge")
 
 
 def is_chrome_detected():
@@ -27,18 +28,24 @@ def is_java8_installed():
 
 def is_program_in_classpath(program_name):
     """
-    Check if the program is in the classpath. The full name of the binary
-    should be specified (e.g. java.exe)
+    Check if the program is in the classpath.
     """
-    if sys.platform.startswith("win"):
-        program_name += ".EXE"
-
     for path_entry in os.environ['PATH'].split(os.pathsep):
-        full_path = os.path.join(path_entry, program_name)
-        if os.path.exists(full_path) and os.path.isfile(full_path):
+        if is_program_in_folder(path_entry, program_name):
             return True
 
     return None
+
+
+def is_program_in_folder(folder, program_name):
+    if sys.platform.startswith("win"):
+        program_name += ".EXE"
+
+    full_path = os.path.join(folder, program_name)
+    if os.path.exists(full_path) and os.path.isfile(full_path):
+        return True
+
+    return False
 
 
 def program_execution_matches(program, searched_pattern):

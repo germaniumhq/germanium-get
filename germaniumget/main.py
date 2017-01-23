@@ -74,13 +74,32 @@ if option == "yes":
 #=====================================================
 print('')
 if is_edge_detected():
-    print(question("Should Edge support be enabled?"))
-    option = read_option("[Y]es", "[N]o", "[C]ancel")
+    def check_edge_and_license():
+        print(question("Should Edge support be enabled?"))
+        option = read_option("[Y]es", "[N]o", "[C]ancel")
 
-    if option == "cancel":
-        exit(1)
+        if option == "cancel":
+            exit(1)
 
-    if option == "yes":
+        if option == "no":
+            return False
+
+        print(question("Do you agree to the Microsoft Edge WebDriver EULA?"))
+        print(text("""
+                   You can find the license at:
+                   https://az813057.vo.msecnd.net/eulas/webdriver-eula.pdf
+        """))
+        option = read_option("[Y]es", "[N]o", "[C]ancel")
+
+        if option == "cancel":
+            exit(1)
+
+        if option == "no":
+            return False
+
+        return True
+
+    if check_edge_and_license():
         install_edge = 1
 else:
     print(warning("No Edge Support"))
