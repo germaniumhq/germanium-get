@@ -1,7 +1,6 @@
 #!/usr/bin/env bash
 
-DOCKER_IMAGE="lpy2"
-#DOCKER_IMAGE="cdrx/pyinstaller-windows:python2"
+DOCKER_IMAGE="cdrx/pyinstaller-windows:python2"
 
 docker run -it \
     --rm \
