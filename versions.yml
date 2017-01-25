@@ -1,0 +1,5 @@
+germanium:
+  version: parent:../germanium@germanium
+  files:
+    germaniumget/main.py: ' |___/  **VERSION$$'
+
