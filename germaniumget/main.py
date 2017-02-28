@@ -44,7 +44,7 @@ print(logo("""
  / _` |/ _ \ '__| '_ ` _ \ / _` | '_ \| | | | | '_ ` _ \\
 | (_| |  __/ |  | | | | | | (_| | | | | | |_| | | | | | |
  \__, |\___|_|  |_| |_| |_|\__,_|_| |_|_|\__,_|_| |_| |_|
- |___/  2.0.0
+ |___/  2.0.1
 
 """))
 
@@ -296,12 +296,12 @@ if install_java:
     download(JAVA_JRE_URL,
              temp("jre-8u121-windows-i586.exe"))
 
-    print(execute_program([temp("jre-8u121-windows-i586.exe"),
+    print(execute_program(temp("jre-8u121-windows-i586.exe"),
                      r'INSTALLDIR=%s' % java_home,
                      'INSTALL_SILENT=Enable',
                      'WEB_JAVA=0',
                      'SPONSORS=0'
-                    ]))
+                    ))
 
 #=====================================================
 # Download and unzip the drivers that are needed.

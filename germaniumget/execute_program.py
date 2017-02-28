@@ -1,6 +1,6 @@
 import subprocess
 
-def execute_program(program):
+def execute_program(*program):
     """
     Execute a single program. Returns both stderr and stdout combined.
     The program parameter is an array of the command and the parameters.
