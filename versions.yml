@@ -3,3 +3,31 @@ germanium:
   files:
     germaniumget/main.py: ' |___/  **VERSION$$'
 
+firefox_driver:
+  version: parent:../germanium-build-system/@firefox_driver
+  files:
+    germaniumget/download_urls.py:
+      - GECKO_DRIVER_DOWNLOAD_URL="https://github.com/mozilla/geckodriver/releases/download/v**VERSION**/
+      - geckodriver-v**VERSION**-win64.zip
+
+chromedriver:
+  version: parent:../germanium-build-system/@chromedriver
+  files:
+    germaniumget/download_urls.py: https://chromedriver.storage.googleapis.com/**VERSION**/chromedriver_win32.zip
+
+iedriver:
+  version: parent:../germanium-build-system/@iedriver
+  files:
+    germaniumget/download_urls.py: IEDriverServer_Win32_**VERSION**.zip
+
+iedriver_major:
+  version: parent:../germanium-build-system/@iedriver_major
+  files:
+    germaniumget/download_urls.py: http://selenium-release.storage.googleapis.com/**VERSION**/IEDriverServer
+
+edgedriver:
+  version: parent:../germanium-build-system/@edgedriver
+
+edgedriver_eula:
+  version: parent:../germanium-build-system/@edgedriver_eula
+
