@@ -50,4 +50,12 @@ edgedriver:
 
 edgedriver_eula:
   version: parent:../germanium-build-system/@edgedriver_eula
+  files:
+    germaniumget/main.py: ^(\s*You can find the license at:\s*)(https://az813057.vo.msecnd.net/eulas/webdriver-eula.pdf)$
+
+edgedriver_url:
+  version: parent:../germanium-build-system/@edgedriver_url
+  files:
+    germaniumget/download_urls.py: EDGE_DRIVER_DOWNLOAD_URL="**VERSION**"
+
 
