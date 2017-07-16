@@ -334,13 +334,14 @@ write_file(ge_folder("run-node.bat"),
         template_run_node(**{
             'hub_address': selenium_hub,
             'java_home': java_home,
-            'germanium_home': germanium_home
+            'germanium_home': germanium_home,
+            'install_java': install_java
         }))
 
 write_file(ge_folder("germanium-node.conf"),
-        template_configuration_file(**{'browsers': browsers_enabled}))
-
-rm_rf(temp())
+        template_configuration_file(**{
+            'browsers': browsers_enabled
+        }))
 
 print('')
 print(title("Create a desktop link?"))
@@ -355,6 +356,8 @@ print(text(r"Run the node by calling %s\run-node.bat" % germanium_home))
 
 print('')
 read_string("Press ENTER to continue")
+
+rm_rf(temp())
 
 colorama.deinit()
 

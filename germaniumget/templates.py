@@ -11,7 +11,7 @@ def template_run_node(**data):
     r"""
     cd {{germanium_home}}/lib
 
-    {{java_home}}/bin/java %SELENIUM_JAVA_OPTS% -jar {{germanium_home}}/lib/selenium-standalone.jar ^
+    {% if install_java %}{{java_home}}/bin/{% endif %}java %SELENIUM_JAVA_OPTS% -jar {{germanium_home}}/lib/selenium-standalone.jar ^
         -role node ^
         -hub http://{{hub_address}}/grid/register ^
         -nodeConfig {{germanium_home}}/germanium-node.conf ^
