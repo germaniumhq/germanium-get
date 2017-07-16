@@ -1,6 +1,6 @@
 IE_DRIVER_DOWNLOAD_URL="http://selenium-release.storage.googleapis.com/3.3/IEDriverServer_Win32_3.3.0.zip"
-GECKO_DRIVER_DOWNLOAD_URL="https://github.com/mozilla/geckodriver/releases/download/v0.16.1/geckodriver-v0.16.1-win64.zip"
-CHROME_DRIVER_DOWNLOAD_URL="https://chromedriver.storage.googleapis.com/2.29/chromedriver_win32.zip"
+GECKO_DRIVER_DOWNLOAD_URL="https://github.com/mozilla/geckodriver/releases/download/v0.18.0/geckodriver-v0.18.0-win64.zip"
+CHROME_DRIVER_DOWNLOAD_URL="https://chromedriver.storage.googleapis.com/2.30/chromedriver_win32.zip"
 
 EDGE_DRIVER_DOWNLOAD_URL="https://download.microsoft.com/download/3/2/D/32D3E464-F2EF-490F-841B-05D53C848D15/MicrosoftWebDriver.exe"
 

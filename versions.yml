@@ -8,13 +8,13 @@ germanium:
 # #######################################################################
 
 selenium_java:
-  version: parent:../germanium-build-system/@selenium_java
+  version: parent:../germanium-build-system/@selenium_germanium_get_java
   files:
     germaniumget/download_urls.py:
       - /selenium-server-standalone-**VERSION**.jar"
 
 selenium_java_major:
-  version: parent:../germanium-build-system/@selenium_java_major
+  version: parent:../germanium-build-system/@selenium_germanium_get_java_major
   files:
     germaniumget/download_urls.py:
       - SELENIUM_STANDALONE_JAR_URL="http://selenium-release.storage.googleapis.com/**VERSION**/selenium-server-standalone
