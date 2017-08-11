@@ -1,6 +1,10 @@
 
 stage('Check Download Links') {
     node {
+        deleteDir()
+
+        checkout scm
+
         sh """
             ./bin/check_download_urls.sh
         """
@@ -9,10 +13,6 @@ stage('Check Download Links') {
 
 stage('Build Docker EXE Creator') {
     node {
-        deleteDir()
-
-        checkout scm
-
         dockerBuild file: './jenkins/Dockerfile',
             tags: ['bmst/pyinstaller-windows-germaniumget-py27']
     }
