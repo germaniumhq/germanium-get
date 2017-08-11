@@ -2,6 +2,8 @@
 
 block_cipher = None
 
+datas=[]
+
 a = Analysis(['germaniumget/main.py'],
              pathex=['./germaniumget'],
              binaries=[],

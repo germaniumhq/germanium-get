@@ -1,4 +1,12 @@
 
+stage('Check Download Links') {
+    node {
+        sh """
+            ./bin/check_download_urls.sh
+        """
+    }
+}
+
 stage('Build Docker EXE Creator') {
     node {
         deleteDir()

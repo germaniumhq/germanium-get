@@ -9,7 +9,7 @@ cd $PROJECT_FOLDER
 # if `validate_url $url >/dev/null`; then dosomething; else echo "does not exist"; fi
 
 function validate_url(){
-  if [[ `wget -S --spider $1  2>&1 | grep 'HTTP/1.1 200 OK'` ]]; then echo "true"; fi
+  if [[ `wget --header="Cookie: oraclelicense=accept-securebackup-cookie" -S --spider $1  2>&1 | grep 'HTTP/1.1 200 OK'` ]]; then echo "true"; fi
 }
 
 for url in `cat germaniumget/download_urls.py | grep -v mozilla | cut -f2 -d\"`; do
