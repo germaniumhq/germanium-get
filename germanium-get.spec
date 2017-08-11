@@ -2,11 +2,10 @@
 
 block_cipher = None
 
-
 a = Analysis(['germaniumget/main.py'],
-             pathex=['/home/raptor/projects/germanium-get'],
-             binaries=None,
-             datas=None,
+             pathex=['./germaniumget'],
+             binaries=[],
+             datas=datas,
              hiddenimports=[],
              hookspath=[],
              runtime_hooks=[],
@@ -14,12 +13,9 @@ a = Analysis(['germaniumget/main.py'],
              win_no_prefer_redirects=False,
              win_private_assemblies=False,
              cipher=block_cipher)
+
 pyz = PYZ(a.pure, a.zipped_data,
              cipher=block_cipher)
-
-
-for f in a.binaries:
-    print("BINARY: %s" % (f,))
 
 exe = EXE(pyz,
           a.scripts,
