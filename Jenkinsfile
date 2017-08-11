@@ -1,13 +1,24 @@
 
+properties([
+    parameters([
+        booleanParam(name: 'CHECK_DOWNLOAD_LINKS', defaultValue: true,
+                description: 'Should the download links from the download_urls.py be checked if they exist.')
+    ])
+])
+
+CHECK_DOWNLOAD_LINKS = Boolean.valueOf(CHECK_DOWNLOAD_LINKS)
+
 stage('Check Download Links') {
     node {
         deleteDir()
 
         checkout scm
 
-        sh """
-            ./bin/check_download_urls.sh
-        """
+        if (CHECK_DOWNLOAD_LINKS) {
+            sh """
+                ./bin/check_download_urls.sh
+            """
+        }
     }
 }
 
