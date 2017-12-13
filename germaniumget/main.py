@@ -24,12 +24,27 @@ from download_urls import \
 
 import os
 
+def parse_tags(tags):
+    values=[]
+
+    for tag in tags.split(","):
+        items = tag.split("=", 1)
+        values.append({
+            "key": items[0],
+            "value": items[1]
+        })
+
+    return values
 
 install_ie = False
 install_edge = False
 install_firefox = False
 install_chrome = False
 install_java = False
+edge_tags = ""
+chrome_tags = ""
+firefox_tags = ""
+ie_tags = ""
 
 germanium_home = r'C:\Germanium'
 java_home = r'C:\Germanium\Java'
@@ -69,6 +84,13 @@ if option == "cancel":
 if option == "yes":
     install_ie = 1
 
+    print(question("IE tags for the Selenium node"))
+    print(block("""
+        You can pass multiple tags in name=value format, comma
+        separated.
+    """))
+    ie_tags = read_string("Tags")
+
 #=====================================================
 # Edge
 #=====================================================
@@ -97,6 +119,13 @@ if is_edge_detected():
         if option == "no":
             return False
 
+        print(question("Edge tags for the Selenium node"))
+        print(block("""
+            You can pass multiple tags in name=value format, comma
+            separated.
+        """))
+        edge_tags = read_string("Tags")
+
         return True
 
     if check_edge_and_license():
@@ -124,6 +153,13 @@ if is_chrome_detected():
 
     if option == "yes":
         install_chrome = 1
+
+        print(question("Chrome tags for the Selenium node"))
+        print(block("""
+            You can pass multiple tags in name=value format, comma
+            separated.
+        """))
+        chrome_tags = read_string("Tags")
 else:
     print(warning("No Chrome Support"))
     print(block(
@@ -147,6 +183,13 @@ if is_firefox_detected():
 
     if option == "yes":
         install_firefox = 1
+
+        print(question("Firefox tags for the Selenium node"))
+        print(block("""
+            You can pass multiple tags in name=value format, comma
+            separated.
+        """))
+        firefox_tags = read_string("Tags")
 else:
     print(warning("No Firefox Support"))
     print(block(
@@ -262,14 +305,16 @@ if install_ie:
     browsers_enabled.append({
         'browserName': 'internet explorer',
         'maxInstances': '1',
-        'seleniumProtocol': 'WebDriver'
+        'seleniumProtocol': 'WebDriver',
+        'extraTags': parse_tags(ie_tags)
     })
 
 if install_firefox:
     browsers_enabled.append({
         'browserName': 'firefox',
         'maxInstances': '10',
-        'seleniumProtocol': 'WebDriver'
+        'seleniumProtocol': 'WebDriver',
+        'extraTags': parse_tags(firefox_tags)
     })
 
 
@@ -277,14 +322,16 @@ if install_chrome:
     browsers_enabled.append({
         'browserName': 'chrome',
         'maxInstances': '10',
-        'seleniumProtocol': 'WebDriver'
+        'seleniumProtocol': 'WebDriver',
+        'extraTags': parse_tags(chrome_tags)
     })
 
 if install_edge:
     browsers_enabled.append({
         'browserName': 'MicrosoftEdge',
         'maxInstances': '10',
-        'seleniumProtocol': 'WebDriver'
+        'seleniumProtocol': 'WebDriver',
+        'extraTags': parse_tags(edge_tags)
     })
 
 #=====================================================

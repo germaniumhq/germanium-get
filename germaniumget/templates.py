@@ -34,6 +34,9 @@ def template_configuration_file(**data):
           "browserName": "{{browser.browserName}}",
           "maxInstances": {{browser.maxInstances}},
           "seleniumProtocol": "{{browser.seleniumProtocol}}"
+          {% for capability in browser.extraTags %}
+          , "{{capability.key}}": "{{capability.value}}"
+          {% endfor %}
         }{% if not loop.last %},{% endif %}{% endfor %}
       ],
       "proxy": "org.openqa.grid.selenium.proxy.DefaultRemoteProxy",
