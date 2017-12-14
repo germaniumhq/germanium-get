@@ -1,54 +1,27 @@
-
-from tqdm import tqdm
-import urllib
 import zipfile
-
-
-class HeaderAwareUrlOpener(urllib.FancyURLopener):
-    def __init__(self, *args, **kw):
-        urllib.FancyURLopener.__init__(self, *args, **kw)
-        self.addheader("Cookie", "oraclelicense=accept-securebackup-cookie")
-
-urllib._urlopener = HeaderAwareUrlOpener()
+import requests
+from tqdm import tqdm
 
 
 def download(url, file_name):
-    def my_hook(t):
-      """
-      Wraps tqdm instance. Don't forget to close() or __exit__()
-      the tqdm instance once you're done with it (easiest using `with` syntax).
+    r = requests.get(url, 
+                     stream=True,
+                     headers={'Cookie': 'oraclelicense=accept-securebackup-cookie'})
 
-      Example
-      -------
+    BLOCK_SIZE = 32 * 1024
+    MEGABYTE = 1024 * 1024
 
-      >>> with tqdm(...) as t:
-      ...     reporthook = my_hook(t)
-      ...     urllib.urlretrieve(..., reporthook=reporthook)
+    file_size = int(r.headers.get('content-length', 0))
+    total_size = file_size / BLOCK_SIZE 
 
-      """
-      last_b = [0]
-
-      def inner(b=1, bsize=1, tsize=None):
-        """
-        b  : int, optional
-            Number of blocks just transferred [default: 1].
-        bsize  : int, optional
-            Size of each block (in tqdm units) [default: 1].
-        tsize  : int, optional
-            Total size (in tqdm units). If [default: None] remains unchanged.
-        """
-        if tsize is not None:
-            t.total = tsize
-        t.update((b - last_b[0]) * bsize)
-        last_b[0] = b
-      return inner
-
-    with tqdm(unit='B', unit_scale=True, miniters=1,
-              desc=url.split('/')[-1]) as t:  # all optional kwargs
-        urllib.urlretrieve(url,
-                           filename=file_name,
-                           reporthook=my_hook(t),
-                           data=None)
+    with open(file_name, 'wb') as f:
+        for data in tqdm(r.iter_content(BLOCK_SIZE), 
+                         total=total_size + 1,
+                         unit='M',
+                         unit_scale=BLOCK_SIZE / MEGABYTE,
+                         bar_format="{l_bar}{bar}| %0.2fM [{elapsed}<{remaining}, {rate_fmt}]" % (file_size / MEGABYTE) ,
+                         miniters=1):
+            f.write(data)
 
 
 def extract_zip(zip_file, target_folder):
