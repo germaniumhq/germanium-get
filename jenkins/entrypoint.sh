@@ -30,10 +30,9 @@ fi # [ -f requirements.txt ]
 echo "$@"
 
 if [[ "$@" == "" ]]; then
-    pyinstaller --clean -y --workpath /tmp --distpath ./dist/windows germanium-get.spec
-    chown -R --reference=. ./dist
+    pyinstaller --clean -y --dist ./dist/windows --workpath /tmp *.spec
+    chown -R --reference=. ./dist/windows
 else
     sh -c "$@"
 fi # [[ "$@" == "" ]]
-
 
