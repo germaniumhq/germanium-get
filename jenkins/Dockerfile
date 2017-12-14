@@ -22,7 +22,7 @@ RUN set -x \
     && mv winetricks /usr/local/bin
 
 # wine settings
-ENV WINEARCH win32
+ENV WINEARCH win64
 ENV WINEDEBUG fixme-all
 ENV WINEPREFIX /wine
 
@@ -36,7 +36,7 @@ ENV PYPI_INDEX_URL=https://pypi.python.org/simple
 RUN set -x \
     && winetricks win7 \
     && for msifile in `echo core dev exe lib path pip tcltk tools`; do \
-        wget -nv "https://www.python.org/ftp/python/$PYTHON_VERSION/win32/${msifile}.msi"; \
+        wget -nv "https://www.python.org/ftp/python/$PYTHON_VERSION/amd64/${msifile}.msi"; \
         wine msiexec /i "${msifile}.msi" /qb TARGETDIR=C:/Python36; \
         rm ${msifile}.msi; \
     done \
@@ -55,19 +55,19 @@ RUN set -x \
 
 ENV W_DRIVE_C=/wine/drive_c
 ENV W_WINDIR_UNIX="$W_DRIVE_C/windows"
-ENV W_SYSTEM32_DLLS="$W_WINDIR_UNIX/system32"
+ENV W_SYSTEM64_DLLS="$W_WINDIR_UNIX/system32"
 ENV W_TMP="$W_DRIVE_C/windows/temp/_$0"
 
 # install Microsoft Visual C++ Redistributable for Visual Studio 2017 dll files
 RUN set -x \
     && rm -f "$W_TMP"/* \
-    && wget -P "$W_TMP" https://download.visualstudio.microsoft.com/download/pr/100349138/88b50ce70017bf10f2d56d60fcba6ab1/VC_redist.x86.exe \
-    && cabextract -q --directory="$W_TMP" "$W_TMP"/VC_redist.x86.exe \
+    && wget -P "$W_TMP" https://download.visualstudio.microsoft.com/download/pr/11100230/15ccb3f02745c7b206ad10373cbca89b/VC_redist.x64.exe \
+    && cabextract -q --directory="$W_TMP" "$W_TMP"/VC_redist.x64.exe \
     && cabextract -q --directory="$W_TMP" "$W_TMP/a10" \
     && cabextract -q --directory="$W_TMP" "$W_TMP/a11" \
     && cd "$W_TMP" \
     && rename 's/_/\-/g' *.dll \
-    && cp "$W_TMP"/*.dll "$W_SYSTEM32_DLLS"/
+    && cp "$W_TMP"/*.dll "$W_SYSTEM64_DLLS"/
 
 # put the src folder inside wine
 RUN mkdir /src/ && ln -s /src /wine/drive_c/src
