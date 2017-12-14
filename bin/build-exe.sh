@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-DOCKER_IMAGE="cdrx/pyinstaller-windows:python2"
+DOCKER_IMAGE="ciplogic/pyinstaller-windows:python3"
 
 docker run -it \
     --rm \
