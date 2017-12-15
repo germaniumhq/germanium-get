@@ -18,6 +18,8 @@ def download(url, file_name, r=None):
     file_size = int(r.headers.get('content-length', 0))
     total_size = file_size / BLOCK_SIZE
 
+    # we handle the redirect manually, since the requests
+    # library is dropping the cookies on redirect atm
     if r.is_redirect:
         return download(r.next.url, file_name)
 
