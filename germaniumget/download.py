@@ -3,16 +3,23 @@ import requests
 from tqdm import tqdm
 
 
-def download(url, file_name):
-    r = requests.get(url, 
-                     stream=True,
-                     headers={'Cookie': 'oraclelicense=accept-securebackup-cookie'})
+def download(url, file_name, r=None):
+    if not r:
+        r = requests.get(url,
+                        allow_redirects=False,
+                        stream=True,
+                        headers={
+                            'Cookie': 'oraclelicense=accept-securebackup-cookie',
+                        })
 
     BLOCK_SIZE = 32 * 1024
     MEGABYTE = 1024 * 1024
 
     file_size = int(r.headers.get('content-length', 0))
-    total_size = file_size / BLOCK_SIZE 
+    total_size = file_size / BLOCK_SIZE
+
+    if r.is_redirect:
+        return download(r.next.url, file_name)
 
     with open(file_name, 'wb') as f:
         for data in tqdm(r.iter_content(BLOCK_SIZE), 
