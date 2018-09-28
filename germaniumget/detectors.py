@@ -3,8 +3,9 @@ from os import path
 import sys
 import re
 import subprocess
-from styles import warning
-from execute_program import execute_program
+
+from germaniumget.styles import warning
+from germaniumget.execute_program import execute_program
 
 def is_edge_detected():
     return is_program_in_folder(r"C:\Windows\SystemApps\Microsoft.MicrosoftEdge_8wekyb3d8bbwe",

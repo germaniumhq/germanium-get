@@ -1,6 +1,7 @@
 from jinja2 import Template
 import textwrap
-from styles import text
+
+from germaniumget.styles import text
 
 def template_run_node(**data):
     """
