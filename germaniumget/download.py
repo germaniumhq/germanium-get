@@ -7,7 +7,7 @@ BLOCK_SIZE = 32 * 1024
 MEGABYTE = 1024 * 1024
 
 
-def download(url: str, 
+def download(url: str,
              file_name: str,
              session=None) -> None:
     """
@@ -29,16 +29,17 @@ def download(url: str,
     # we handle the redirect manually, since the requests
     # library is dropping the cookies on redirect atm
     if response.is_redirect:
-        return download(response.next.url, file_name, session) # type: ignore
+        return download(response.next.url, file_name, session)  # type: ignore
 
     with open(file_name, 'wb') as f:
-        for data in tqdm(response.iter_content(BLOCK_SIZE), 
+        for data in tqdm(response.iter_content(BLOCK_SIZE),
                          total=total_size + 1,
                          unit='M',
                          unit_scale=BLOCK_SIZE / MEGABYTE,
-                         bar_format="{l_bar}{bar}| %0.2fM [{elapsed}<{remaining}, {rate_fmt}]" % (file_size / MEGABYTE) ,
+                         bar_format="{l_bar}{bar}| %0.2fM [{elapsed}<{remaining}, {rate_fmt}]" % (file_size / MEGABYTE),
                          miniters=1):
             f.write(data)
+
 
 def extract_zip(zip_file: str,
                 target_folder: str):
@@ -53,4 +54,3 @@ def extract_zip(zip_file: str,
 
     zip_ref = zipfile.ZipFile(zip_file, 'r')
     zip_ref.extractall(target_folder)
-    zip_ref.close()

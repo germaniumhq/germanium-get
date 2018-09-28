@@ -1,10 +1,12 @@
 import os
 import tempfile
 import shutil
+import errno
 
 
 def create_temp_folder():
     temp_folder = tempfile.mkdtemp(prefix='germanium_', suffix='install')
+
     def temp(subpath=''):
         return os.path.join(temp_folder, subpath)
 
@@ -67,4 +69,3 @@ def create_desktop_link(title, application, icon=None, workdir=None):
         shortcut.save()
     except ImportError as e:
         pass
-

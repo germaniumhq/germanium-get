@@ -66,7 +66,7 @@ def read_option(*opts, **kw):
 
     while True:
         print(options(*opts, **kw), end="")
-        result = raw_input()
+        result = input()
 
         for opt in opts:
             m = re.match(r'^(.*?)\[(.*?)\](.*?)$', opt)
@@ -74,14 +74,12 @@ def read_option(*opts, **kw):
             lower_text = text.lower()
 
             if lower_text == result.lower() or\
-                m.group(2).lower() == result.lower(): #  the shortcut
+                    m.group(2).lower() == result.lower():  # the shortcut
 
                 print(title(text))
                 return lower_text
 
-            if result == '' and \
-                default_value == opt:
-
+            if result == '' and default_value == opt:
                 print(title(text))
                 return lower_text
 
@@ -95,7 +93,7 @@ def read_string(prompt, default=None):
     else:
         print(text("%s (%s):" % (prompt, default)), end="")
 
-    result = raw_input()
+    result = input()
 
     if not result:
         print(title(default))
@@ -103,4 +101,3 @@ def read_string(prompt, default=None):
 
     print(title(result))
     return result
-
