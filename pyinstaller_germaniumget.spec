@@ -4,8 +4,8 @@ block_cipher = None
 
 datas=[]
 
-a = Analysis(['germaniumget/main.py'],
-             pathex=['./germaniumget'],
+a = Analysis(['application.py'],
+             pathex=['.'],
              binaries=[],
              datas=datas,
              hiddenimports=[],
