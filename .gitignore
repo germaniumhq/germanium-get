@@ -1,4 +1,6 @@
-build
-dist
+/build
+/dist
 __pycache__
+.mypy_cache/
+.vscode/
 *.pyc

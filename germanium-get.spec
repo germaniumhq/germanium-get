@@ -16,6 +16,8 @@ a = Analysis(['germaniumget/main.py'],
              win_private_assemblies=False,
              cipher=block_cipher)
 
+print("Binaries: %s" % a.binaries)
+
 pyz = PYZ(a.pure, a.zipped_data,
              cipher=block_cipher)
 

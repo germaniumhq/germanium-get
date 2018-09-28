@@ -1,52 +1,10 @@
-
-properties([
-    parameters([
-        booleanParam(name: 'CHECK_DOWNLOAD_LINKS', defaultValue: true,
-                description: 'Should the download links from the download_urls.py be checked if they exist.')
-    ])
-])
-
-CHECK_DOWNLOAD_LINKS = Boolean.valueOf(CHECK_DOWNLOAD_LINKS)
-
-stage('Check Download Links') {
-    node {
-        deleteDir()
-
-        checkout scm
-
-        if (CHECK_DOWNLOAD_LINKS) {
-            sh """
-                ./bin/check_download_urls.sh
-            """
-        }
-    }
-}
-
-stage('Build Docker EXE Creator') {
-    node {
-        dockerBuild file: './jenkins/Dockerfile',
-            tags: ['bmst/pyinstaller-windows-germaniumget-py27']
-    }
-}
-
-stage('Build EXE File') {
-    node {
-        dockerRun image: 'bmst/pyinstaller-windows-germaniumget-py27',
-            remove: true,
-            env: [
-                'PYPI_URL=http://nexus:8081/repository/pypi-local/pypi',
-                'PYPI_INDEX_URL=http://nexus:8081/repository/pypi-local/simple'
-            ],
-            links: [
-                'nexus:nexus'
-            ],
-            volumes: [
-                // Sad panda, I need to specify the absolute path on the docker host
-                // while running in a container.
-                "/opt/jenkins_home/jobs/germanium-get/workspace:/src:rw"
-            ]
-
-        archiveArtifacts artifacts: 'dist/windows/germanium-get.exe', fingerprint: true
-    }
-}
+germaniumPyExePipeline(
+    binaries: [
+        "Win 32": [
+            gbs: "/",
+            exe: "/src/dist/main.exe",
+            dockerTag: "germaniumhq/germanium-get:win32"
+        ]
+    ]
+)
 

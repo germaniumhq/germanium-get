@@ -1,3 +1,6 @@
+import subprocess
+subprocess.call("cmd.exe")
+
 import colorama
 import textwrap
 from styles import title, text, question, option, options, read_option, warning, block, logo, read_string
